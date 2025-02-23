@@ -20,8 +20,8 @@ const ProductCard = ({product}: IProps) => {
         className="rounded-md mb-2"
       />   
         
-      <h3> {title} </h3>
-      <p> {txtSlicer(description)} </p>
+      <h3 className="text-lg font-semibold">{txtSlicer(title, 25)}</h3>
+      <p className="text-xs text-gray-500 break-words">{txtSlicer(description)}</p>
 
       <div className="flex items-center gap-1 my-2">
         <span className="w-5 h-5 bg-indigo-600 rounded-full cursor-pointer" />
