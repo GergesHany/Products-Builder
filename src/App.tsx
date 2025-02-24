@@ -2,12 +2,14 @@
 import Button from './components/ui/Button';
 import ProductCard from './components/ProductCard'
 import Modal from './components/ui/Modal';
-import { formInputsList, productList } from './data'
+import { formInputsList, productList, colors } from './data'
 import { useState, ChangeEvent, FormEvent } from 'react'
 import Input from './components/ui/Input';
 import { IProduct } from './interfaces';
 import { productValidation } from './validation';
 import ErrorMessage from './components/ErrorMessage';
+import CircleColor from './components/CircleColor';
+
 
 const App = () => {
 
@@ -94,11 +96,15 @@ const App = () => {
       </div>
     );
   });
+
+  const renderProductColors = colors.map((color) => {
+    return <CircleColor key={color} color={color} />
+  });
   
   return (
     <main className="container">
       
-      <Button className="bg-indigo-700 hover:bg-indigo-800" onClick={openModal} >Add a new Product </Button>
+      <Button className="bg-indigo-700 hover:bg-indigo-800" onClick={openModal} >Build Product </Button>
 
       <div className = "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2 md:gap-4 p-2 m-5 rounded-md" >
         {renderProductList}
@@ -108,6 +114,10 @@ const App = () => {
         <form className='space-y-3' onSubmit={submitHandler}>
           {renderFormInputList}
         
+          <div className="flex items-center gap-1 my-1">
+            {renderProductColors}
+          </div>
+
           <div className='flex items-center space-x-3'>
             <Button className='bg-indigo-600 hover:bg-indigo-800'>Submit</Button>
             <Button type="button" className='bg-[#f5f5fa] hover:bg-gray-300 !text-black' onClick={onCancel}>Cancel</Button>
