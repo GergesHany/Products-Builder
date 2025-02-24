@@ -58,6 +58,8 @@ const App = () => {
 
   // Error message state
   const [errors, setErrors] = useState(defaultErrorMessage);
+  const [tempColor, setTempColor] = useState < string[] > ([]);
+  console.log("tempColor: ", tempColor)
 
   const submitHandler = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault(); // Prevents page reload
@@ -85,6 +87,7 @@ const App = () => {
   }
 
 
+
   // --------------- Render ----------------- //
   const renderProductList = productList.map((product) => { return <ProductCard key={product.id} product={product} /> });
   const renderFormInputList = formInputsList.map(input => {
@@ -98,7 +101,15 @@ const App = () => {
   });
 
   const renderProductColors = colors.map((color) => {
-    return <CircleColor key={color} color={color} />
+    return <CircleColor key={color} color={color} onClick={
+      () => {
+        if (tempColor.includes(color)) {
+          setTempColor((prev) => prev.filter((c) => c !== color));
+          return;
+        }
+        setTempColor((prev) => [...prev, color]);
+      }
+    } />
   });
   
   return (
@@ -114,8 +125,15 @@ const App = () => {
         <form className='space-y-3' onSubmit={submitHandler}>
           {renderFormInputList}
         
-          <div className="flex items-center gap-1 my-1">
-            {renderProductColors}
+          <div className="flex items-center flex-warp space-x-1"> {renderProductColors} </div>
+          <div className="flex items-center flex-wrap space-x-1">
+            {
+              tempColor.map((color) => (
+                <span key={color} className="p-1 mr-1 mb-1 text-xs rounded-md text-white" style={{backgroundColor: color}} >
+                  {color}
+                </span>
+              ))
+            }
           </div>
 
           <div className='flex items-center space-x-3'>
