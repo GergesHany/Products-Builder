@@ -10,6 +10,8 @@ import { productValidation } from './validation';
 import ErrorMessage from './components/ErrorMessage';
 import CircleColor from './components/CircleColor';
 
+import { v4 as uuid } from 'uuid';
+
 
 const App = () => {
 
@@ -39,6 +41,7 @@ const App = () => {
   // --------------- State ----------------- //
 
   // State for form inputs
+  const [Products, setProducts] = useState<IProduct[]>(productList);
   const [Product, setProduct] = useState<IProduct>(defaultProductObj);
 
   // State for modal open/close
@@ -59,7 +62,6 @@ const App = () => {
   // Error message state
   const [errors, setErrors] = useState(defaultErrorMessage);
   const [tempColor, setTempColor] = useState < string[] > ([]);
-  console.log("tempColor: ", tempColor)
 
   const submitHandler = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault(); // Prevents page reload
@@ -78,7 +80,21 @@ const App = () => {
       setErrors(errors); 
       return;
     }
-    
+
+    setProducts((prev) => {
+      return [
+          {
+            ...Product,
+            id: uuid(),
+            colors: tempColor
+          },
+          ...prev
+        ];
+      }
+    );
+    setProduct(defaultProductObj);
+    setTempColor([]);
+    closeModal();
   };
 
   const onCancel = () => {
@@ -86,10 +102,17 @@ const App = () => {
     setProduct(defaultProductObj);
   }
 
-
-
+  const TempColorHandler = (color: string) => {
+    setTempColor((prev) => {
+      if (prev.includes(color)) {
+        return prev.filter((c) => c !== color);
+      }
+      return [...prev, color];
+    });
+  };
+  
   // --------------- Render ----------------- //
-  const renderProductList = productList.map((product) => { return <ProductCard key={product.id} product={product} /> });
+  const renderProductList = Products.map((product) => { return <ProductCard key={product.id} product={product} /> });
   const renderFormInputList = formInputsList.map(input => {
     return (
       <div className='flex flex-col' key={input.id}>
@@ -100,17 +123,10 @@ const App = () => {
     );
   });
 
-  const renderProductColors = colors.map((color) => {
-    return <CircleColor key={color} color={color} onClick={
-      () => {
-        if (tempColor.includes(color)) {
-          setTempColor((prev) => prev.filter((c) => c !== color));
-          return;
-        }
-        setTempColor((prev) => [...prev, color]);
-      }
-    } />
-  });
+  const renderProductColors = colors.map((color) => (
+    <CircleColor key={color} color={color} onClick={() => TempColorHandler(color)} />
+  ));
+  
   
   return (
     <main className="container">
