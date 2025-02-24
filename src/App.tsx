@@ -2,16 +2,16 @@
 import Button from './components/ui/Button';
 import ProductCard from './components/ProductCard'
 import Modal from './components/ui/Modal';
-import { formInputsList, productList, colors } from './data'
+import { formInputsList, productList, colors, categories } from './data'
 import { useState, ChangeEvent, FormEvent } from 'react'
 import Input from './components/ui/Input';
 import { IProduct } from './interfaces';
 import { productValidation } from './validation';
 import ErrorMessage from './components/ErrorMessage';
 import CircleColor from './components/CircleColor';
+import Select from './components/ui/Select';
 
 import { v4 as uuid } from 'uuid';
-
 
 const App = () => {
 
@@ -43,6 +43,7 @@ const App = () => {
   // State for form inputs
   const [Products, setProducts] = useState<IProduct[]>(productList);
   const [Product, setProduct] = useState<IProduct>(defaultProductObj);
+  const [selectedCategory, setSelectedCategory] = useState(categories[0])
 
   // State for modal open/close
   const [isOpen, setIsOpen] = useState(false)
@@ -137,11 +138,14 @@ const App = () => {
         {renderProductList}
       </div>
       
+      
       <Modal isOpen={isOpen} closeModal={closeModal} title="Add a new Product">
         <form className='space-y-3' onSubmit={submitHandler}>
           {renderFormInputList}
-        
+          <Select selected={selectedCategory} setSelected={setSelectedCategory} />
+
           <div className="flex items-center flex-warp space-x-1"> {renderProductColors} </div>
+     
           <div className="flex items-center flex-wrap space-x-1">
             {
               tempColor.map((color) => (
