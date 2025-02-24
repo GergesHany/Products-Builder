@@ -7,6 +7,7 @@ import { useState, ChangeEvent, FormEvent } from 'react'
 import Input from './components/ui/Input';
 import { IProduct } from './interfaces';
 import { productValidation } from './validation';
+import ErrorMessage from './components/ErrorMessage';
 
 const App = () => {
 
@@ -23,6 +24,13 @@ const App = () => {
       name: '', 
       imageURL: '' 
     }
+  };
+
+  const defaultErrorMessage = {
+    title: '',
+    description: '',
+    imageURL: '',
+    price: ''
   };
 
 
@@ -43,18 +51,30 @@ const App = () => {
       ...Product, 
       [name]: value
     });
+    setErrors(defaultErrorMessage);
   }
+
+  // Error message state
+  const [errors, setErrors] = useState(defaultErrorMessage);
 
   const submitHandler = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault(); // Prevents page reload
-    const errors = productValidation({
-      title: Product.title,
-      description: Product.description,
-      imageURL: Product.imageURL,
-      price: Product.price
-    });
     
-    console.log("Errors:", errors); // Expected output
+    const { title, description, imageURL, price } = Product;
+    const errors = productValidation({
+      title, 
+      description, 
+      imageURL, 
+      price,
+    });
+
+    const hasErrorMsg = Object.values(errors).some((err) => err === '') && Object.values(errors).every((err) => err === '') 
+
+    if (!hasErrorMsg) {
+      setErrors(errors); 
+      return;
+    }
+    
   };
 
   const onCancel = () => {
@@ -70,6 +90,7 @@ const App = () => {
       <div className='flex flex-col' key={input.id}>
         <label htmlFor={input.id} className='mb-[2px] text-sm font-medium text-gray-700' > {input.label} </label>
         <Input type = 'text' id={input.id} name={input.name} value={Product[input.name]} onChange={onChangeHandler} />
+        <ErrorMessage msg={errors[input.name]} />
       </div>
     );
   });
