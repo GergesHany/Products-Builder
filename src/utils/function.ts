@@ -10,3 +10,13 @@ export function txtSlicer(txt: string, max: number = 50) : string {
   }
   return txt; 
 }
+
+
+/**
+ * @param {number} num: Number to format
+ * @returns {string}: Formatted number with commas
+*/
+
+export function dotesNumber(num: string): string {
+  return num.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
