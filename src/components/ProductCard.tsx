@@ -3,6 +3,7 @@ import Image from "./Image";
 import Button from "./ui/Button";
 import { txtSlicer, dotesNumber } from "../utils/function";
 import CircleColor from '../components/CircleColor';
+import {categories } from '../data/';
 
 
 interface IProps { 
@@ -53,8 +54,8 @@ const ProductCard = ({product, setProductToEdit, openEditModal, setProductToEdit
       <div className="flex items-center justify-between mt-auto">  
         <span> ${dotesNumber(price)} </span>
         <Image
-          imageURL={category.imageURL}
-          alt={category.name}
+          imageURL={category.imageURL || categories[0].imageURL}
+          alt={category.name || categories[0].name}
           className="w-10 h-10 rounded-full"
         />
       </div>  
