@@ -3,7 +3,7 @@ import Button from './components/ui/Button';
 import ProductCard from './components/ProductCard'
 import Modal from './components/ui/Modal';
 import { formInputsList, productList, colors, categories } from './data'
-import { useState, ChangeEvent, FormEvent } from 'react'
+import { useState, ChangeEvent, FormEvent, useEffect } from 'react'
 import Input from './components/ui/Input';
 import { IProduct } from './interfaces';
 import { productValidation } from './validation';
@@ -39,8 +39,23 @@ const App = () => {
   };
 
 
-  // --------------- States ----------------- //
+  // theme configuration
+  const [theme, Settheme] = useState('light');
+  
+  const toggleTheme = () => {
+    Settheme(theme === 'light'? 'dark' : 'light');
+  }
 
+  useEffect(() => {
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [theme]);
+  
+
+  // --------------- States ----------------- //
 
   const [isOpen, setIsOpen] = useState(false)
   const [isOpenEditModal, setIsOpenEditModal] = useState(false)
@@ -60,7 +75,6 @@ const App = () => {
   const closeModal = () => setIsOpen(false)
   const closeConfirmModal = () => setIsOpenConfirmModal(false);
   const openConfirmModal = () => setIsOpenConfirmModal(true);
-  // const [selectedColors, setSelectedColors] = useState<string[]>([]);
 
   const openEditModal = () => setIsOpenEditModal(true)
   const closeEditModal = () => setIsOpenEditModal(false)
@@ -213,12 +227,15 @@ const App = () => {
     );
   };
 
-  
   return (
-    <main className="container">
+
+    <main className='container'>
+      <Button className="absolute top-0 right-2 block bg-indigo-700 hover:bg-indigo-800 mx-auto my-1 font-medium w-fit rounded-lg text-white duration-200" onClick={toggleTheme} width="w-fit" >
+        {theme === 'light' ? 'Dark' : 'Light'} Mode
+      </Button>
       
       <Button className="block bg-indigo-700 hover:bg-indigo-800 mx-auto my-5 font-medium w-fit rounded-lg text-white mt-10 px-3 py-3 duration-200" onClick={openModal} width="w-fit" >
-        Build a Product
+          Build a Product
       </Button>
 
       <div className = "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2 md:gap-4 p-2 m-5 rounded-md" >
